@@ -17,7 +17,7 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.8
+        dotnet-version: 6.0.x
         
       # Publishes Blazor project to the release-folder
       # Using the -c (--configuration) argument, you can tell to build the project using the Release configuration
