@@ -1,0 +1,35 @@
+name: Deploy to GitHub Pages
+
+# Run workflow on every push to the master branch (triggers the workflow)
+on:
+  push:
+    branches: [ master ]
+    
+jobs:
+  deploy-to-github-pages:
+    # Use ubuntu-latest image to run steps on
+    runs-on: ubuntu-latest
+    steps:
+      # Uses GitHub's checkout action to checkout code form the master branch
+    - uses: actions/checkout@v2
+    
+    # Sets up .NET Core SDK 6.0.8 on the ubuntu-machine
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.8
+        
+      # Publishes Blazor project to the release-folder
+      # Using the -c (--configuration) argument, you can tell to build the project using the Release configuration
+      # Using the -o (--output) argument, you can specify where to put the published files. Tell dotnet to publish the project to the release folder
+    - name: Publish .NET Core Project
+      run: dotnet publish BlazorWasmGHPagesDemo.csproj -c Release -o release --nologo
+      
+      # This action will make it easy to publish static files to GitHub Pages
+      # The ${{ secrets.GITHUB_TOKEN }} resolves to a token used for securely communicating with GitHub
+    - name: Commit wwwroot to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: release/wwwroot
