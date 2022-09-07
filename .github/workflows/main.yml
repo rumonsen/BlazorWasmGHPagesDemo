@@ -25,9 +25,13 @@ jobs:
     - name: Publish .NET Core Project
       run: dotnet publish BlazorWasmGHPagesDemo.csproj -c Release -o release --nologo
       
-      # changes the base-tag in index.html from '/' to 'BlazorWasmGHPagesDemo' to match GitHub Pages repository subdirectory
+      # Changes the base-tag in index.html from '/' to 'BlazorWasmGHPagesDemo' to match GitHub Pages repository subdirectory
     - name: Change base-tag in index.html from / to BlazorWasmGHPagesDemo
       run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorWasmGHPagesDemo\/" \/>/g' release/wwwroot/index.html
+      
+       # Add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
+    - name: Add .nojekyll file
+      run: touch release/wwwroot/.nojekyll
       
       # This action will make it easy to publish static files to GitHub Pages
       # The ${{ secrets.GITHUB_TOKEN }} resolves to a token used for securely communicating with GitHub
